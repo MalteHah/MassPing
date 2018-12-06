@@ -1,5 +1,3 @@
-#!/usr/local/bin/python3.6
-
 """
 MassPing.py
 
@@ -9,6 +7,13 @@ the results into a webpage
 v1	2017-1217	jadavis Initial version
 v2  2018-0118	jadavis	Updated to tag influxdb data with hostname as supplied in devicelist;
 						also removed HTML web page creation in lieu of using Grafana
+
+Forked Version Malte Hahlbeck
+
+- code cleanups
+- logging
+- pysnmp, queue utilization, QoS
+
 """
 
 import shlex
