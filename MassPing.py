@@ -23,11 +23,9 @@ import shlex
 from subprocess import check_output, Popen, PIPE
 import re
 import requests
-# import sys #needed for sys.exit
 # import schedule
 import time
 import datetime
-# import logging
 import logging.handlers
 
 ## User defined vars
@@ -63,7 +61,6 @@ def getpingresults():
     cmd = "/usr/local/sbin/fping -C 3 -A -q {}".format(" ".join(map(str, iplist.keys())))
     exitcode, out, results = get_fping_output(cmd)
 
-    pingresults = []
     for aline in results.split("\n"):
         logger.debug('Working on line: {0}'.format(aline))
         if aline:
@@ -72,8 +69,6 @@ def getpingresults():
             rtt = m.group(2)
             if rtt == '-':
                 iplist[ipaddress] += (float(9999),)
-            #                       elif float(rtt) > warningratio:
-            #                               iplist[ipaddress] += (float(rtt),)
             else:
                 iplist[ipaddress] += (float(rtt),)
 
@@ -85,10 +80,6 @@ def createtabledata():
     iplist = getpingresults()
     influxdata = []
     for key, values in iplist.items():
-        # print(key, values)
-        # print(values[0], values[1], values[2], values[3])
-        # InfluxDB line protocol template...
-        # ping,host=<host>,hostname=<hostname>,location=<location> rtt=<value>
         influxentry = "ping,host=" + key + ",hostname=" + values[0] + ",location=" + values[1] + ",function=" + values[
             2] + " rtt=" + str(values[3])
         influxdata.append(influxentry)
@@ -109,29 +100,9 @@ def write2influx():
     print(response.text)
 
 
-# def write2influx():
-#       influxdata = createtabledata()
-#       url = "http://10.3.42.110:8086/write"
-#       params = {"db":databasename}
-#       headers = {
-#       'Content-Type': "application/x-www-form-urlencoded",
-#       }
-#        
-#        response = requests.request("POST", url, data=influxdata, headers=headers, params=params)
-#       print(response.text)
-
-
 def dowork():
-    timenow = datetime.datetime.fromtimestamp(time.time()).strftime('%Y-%m-%d %H:%M:%S')
-    start = datetime.datetime.now()
-    # logger.info("Started...", timenow)
     logger.info("Started...")
     write2influx()
-    end = datetime.datetime.now()
-    elapsed = end - start
-    # print(elapsed.seconds,":",elapsed.microseconds)
-    # timenow = datetime.datetime.fromtimestamp(time.time()).strftime('%Y-%m-%d %H:%M:%S')
-    # logger.info("Done... {0}.{1}sec".format(elapsed.seconds, elapsed.microseconds))
     logger.info("Done...")
 
 
