@@ -49,9 +49,10 @@ def load_devicefile():
     iplist = dict()
     with open(devicelist) as file:
         for line in file:
-            line = line.strip()  # preprocess line
-            ipaddress, hostname, location, function = line.split()
-            iplist[ipaddress] = [hostname, location, function]
+            if line[0] != "#":
+                line = line.strip()  # preprocess line
+                ipaddress, hostname, location, function = line.split()
+                iplist[ipaddress] = [hostname, location, function]
     logger.info('Loading devicelist')
     return iplist
 
