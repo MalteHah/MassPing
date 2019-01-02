@@ -98,7 +98,7 @@ def write2influx():
         'Content-Type': "application/x-www-form-urlencoded",
     }
     response = requests.request("POST", url, data=influxdata, headers=headers, params=params)
-    print(response.text)
+    #print(response.text)
 
 
 def dowork():
